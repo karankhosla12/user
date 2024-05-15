@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn API Fetch</title>
+</head>
+<body>
+    <h1>LinkedIn User Info</h1>
+    <button id="fetchButton">Fetch LinkedIn Data</button>
+
+    <form id="userInfoForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
+        <label for="headline">Headline:</label>
+        <input type="text" id="headline" name="headline"><br><br>
+    </form>
+
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', function() {
+            // Get cookies
+            const getCookie = (name) => {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            };
+
+            // Set up headers with necessary cookies
+            const headers = new Headers();
+            headers.append('li_rm', getCookie('li_rm'));
+            headers.append('bscookie', getCookie('bscookie'));
+            headers.append('aam_uuid', getCookie('aam_uuid'));
+            headers.append('g_state', getCookie('g_state'));
+            headers.append('JSESSIONID', getCookie('JSESSIONID'));
+            headers.append('s_fid', getCookie('s_fid'));
+            headers.append('timezone', getCookie('timezone'));
+            headers.append('li_theme', getCookie('li_theme'));
+            headers.append('li_theme_set', getCookie('li_theme_set'));
+            headers.append('dfpfpt', getCookie('dfpfpt'));
+            headers.append('VID', getCookie('VID'));
+            headers.append('_gcl_au', getCookie('_gcl_au'));
+            headers.append('liveagent_oref', getCookie('liveagent_oref'));
+            headers.append('liveagent_ptid', getCookie('liveagent_ptid'));
+            headers.append('liveagent_vc', getCookie('liveagent_vc'));
+            headers.append('AMCV_14215E3D5995C57C0A495C55%40AdobeOrg', getCookie('AMCV_14215E3D5995C57C0A495C55%40AdobeOrg'));
+            headers.append('bcookie', getCookie('bcookie'));
+            headers.append('li_sugr', getCookie('li_sugr'));
+            headers.append('liap', getCookie('liap'));
+            headers.append('AnalyticsSyncHistory', getCookie('AnalyticsSyncHistory'));
+            headers.append('lms_ads', getCookie('lms_ads'));
+            headers.append('lms_analytics', getCookie('lms_analytics'));
+            headers.append('fptctx2', getCookie('fptctx2'));
+            headers.append('s_ips', getCookie('s_ips'));
+            headers.append('s_cc', getCookie('s_cc'));
+            headers.append('jupyterhub-hub-login', getCookie('jupyterhub-hub-login'));
+            headers.append('PLAY_LANG', getCookie('PLAY_LANG'));
+            headers.append('_clck', getCookie('_clck'));
+            headers.append('_clsk', getCookie('_clsk'));
+            headers.append('s_tp', getCookie('s_tp'));
+            headers.append('lang', getCookie('lang'));
+            headers.append('PLAY_SESSION', getCookie('PLAY_SESSION'));
+            headers.append('UserMatchHistory', getCookie('UserMatchHistory'));
+            headers.append('gpv_pn', getCookie('gpv_pn'));
+            headers.append('s_ppv', getCookie('s_ppv'));
+            headers.append('s_sq', getCookie('s_sq'));
+            headers.append('s_tslv', getCookie('s_tslv'));
+            headers.append('li_at', getCookie('li_at'));
+            headers.append('lidc', getCookie('lidc'));
+
+            // Fetch LinkedIn data
+            fetch('https://www.linkedin.com/help/linkedin/experiment/whoami', { method: 'GET', headers: headers })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Log the response for debugging
+                    const profile = data.identity.profile;
+                    document.getElementById('name').value = `${profile.firstName} ${profile.lastName}`;
+                    document.getElementById('email').value = profile.primaryEmail;
+                    document.getElementById('headline').value = profile.headline;
+                })
+                .catch(error => console.error('Error fetching LinkedIn data:', error));
+        });
+    </script>
+</body>
+</html>
