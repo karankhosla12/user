@@ -20,20 +20,34 @@
 
     <script>
         document.getElementById('fetchButton').addEventListener('click', function() {
-            // Fetch LinkedIn data with credentials to include cookies
-            fetch('https://www.linkedin.com/help/linkedin/experiment/whoami', {
+            console.log('Button clicked, starting fetch...');
+
+            // Fetch LinkedIn data from server-side proxy
+            fetch('https://nodejs-serverless-function-express-83kiuuop1.vercel.app/api/hello', {
                 method: 'GET',
                 credentials: 'include'
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data); // Log the response for debugging
-                const profile = data.identity.profile;
-                document.getElementById('name').value = `${profile.firstName} ${profile.lastName}`;
-                document.getElementById('email').value = profile.primaryEmail;
-                document.getElementById('headline').value = profile.headline;
+            .then(response => {
+                console.log('Received response:', response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
             })
-            .catch(error => console.error('Error fetching LinkedIn data:', error));
+            .then(data => {
+                console.log('Data received:', data);
+                if (data.identity && data.identity.profile) {
+                    const profile = data.identity.profile;
+                    document.getElementById('name').value = `${profile.firstName} ${profile.lastName}`;
+                    document.getElementById('email').value = profile.primaryEmail;
+                    document.getElementById('headline').value = profile.headline;
+                } else {
+                    console.error('Profile data is missing in the response');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching LinkedIn data:', error);
+            });
         });
     </script>
 </body>
