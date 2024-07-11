@@ -3,7 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Based Discounts</title>
+    <title>Spin Wheel Discounts</title>
+    <style>
+        #wheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 10px solid #ccc;
+            margin: 50px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #wheel::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background-color: black;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        #pointer {
+            width: 0; 
+            height: 0; 
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid red;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .segment {
+            width: 50%;
+            height: 50%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform-origin: left bottom;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .segment:nth-child(1) { transform: rotate(0deg) skewY(-30deg); background-color: #f00; }
+        .segment:nth-child(2) { transform: rotate(60deg) skewY(-30deg); background-color: #ff0; }
+        .segment:nth-child(3) { transform: rotate(120deg) skewY(-30deg); background-color: #0f0; }
+        .segment:nth-child(4) { transform: rotate(180deg) skewY(-30deg); background-color: #0ff; }
+        .segment:nth-child(5) { transform: rotate(240deg) skewY(-30deg); background-color: #00f; }
+        .segment:nth-child(6) { transform: rotate(300deg) skewY(-30deg); background-color: #f0f; }
+    </style>
     <script>
         function setCookie(name, value, days) {
             let expires = "";
@@ -39,24 +92,45 @@
 
             if (!firstCookie || (new Date(firstCookie) < new Date(now.getTime() - 24 * 60 * 60 * 1000))) {
                 setCookie('first', now.toISOString(), 1);
-                document.getElementById('message').innerText = "Congratulations, you get 10% off on your next beer.";
                 setCookie('second', now.toISOString(), 1);
+                return "Congratulations, you get 10% off on your next beer.";
             } else if (secondCookie && (new Date(secondCookie) < new Date(now.getTime() - 30 * 60 * 1000))) {
-                document.getElementById('message').innerText = "Congratulations, you get 10% off on your next beer.";
                 setCookie('third', now.toISOString(), 1);
+                return "Congratulations, you get 10% off on your next beer.";
             } else if (thirdCookie && (new Date(thirdCookie) < new Date(now.getTime() - 60 * 60 * 1000))) {
-                document.getElementById('message').innerText = "Congratulations, you get 25% off on your next beer.";
                 setCookie('end', now.toISOString(), 1);
+                return "Congratulations, you get 25% off on your next beer.";
             } else if (endCookie && (new Date(endCookie) < new Date(now.getTime() - 24 * 60 * 60 * 1000))) {
-                document.getElementById('message').innerText = "Congratulations, you get 5% off on your next beer.";
+                return "Congratulations, you get 5% off on your next beer.";
             } else {
-                document.getElementById('message').innerText = "Welcome back! Enjoy your visit.";
+                return "Welcome back! Enjoy your visit.";
             }
+        }
+
+        function spinWheel() {
+            const wheel = document.getElementById('wheel');
+            const message = document.getElementById('message');
+            const degree = Math.floor(Math.random() * 360) + 720; // 2 full rotations + random
+            wheel.style.transition = 'transform 4s ease-out';
+            wheel.style.transform = `rotate(${degree}deg)`;
+
+            setTimeout(() => {
+                message.innerText = checkCookies();
+            }, 4000);
         }
     </script>
 </head>
-<body onload="checkCookies()">
+<body>
     <h1>Welcome to Our Website</h1>
-    <p id="message"></p>
+    <div id="wheel" onclick="spinWheel()">
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div class="segment"></div>
+        <div id="pointer"></div>
+    </div>
+    <p id="message">Click the wheel to spin and get a discount!</p>
 </body>
 </html>
