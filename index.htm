@@ -89,7 +89,7 @@
             const secondCookie = getCookie('second');
             const thirdCookie = getCookie('third');
             
-            if (firstCookie && (new Date(firstCookie) < new Date(now.getTime() - 24 * 60 * 60 * 1000))) {
+            if (firstCookie && (new Date(firstCookie) < new Date(now.getTime() - 10 * 60 * 60 * 1000))) {
                 eraseCookie('first');
                 eraseCookie('second');
                 eraseCookie('third');
