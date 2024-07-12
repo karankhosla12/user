@@ -83,24 +83,37 @@
             document.cookie = name + '=; Max-Age=-99999999;';
         }
 
+        function clearOldCookies() {
+            const now = new Date();
+            const firstCookie = getCookie('first');
+            const secondCookie = getCookie('second');
+            const thirdCookie = getCookie('third');
+            
+            if (firstCookie && (new Date(firstCookie) < new Date(now.getTime() - 24 * 60 * 60 * 1000))) {
+                eraseCookie('first');
+                eraseCookie('second');
+                eraseCookie('third');
+                return true;
+            }
+            return false;
+        }
+
         function checkCookies() {
             const now = new Date();
             const firstCookie = getCookie('first');
             const secondCookie = getCookie('second');
             const thirdCookie = getCookie('third');
-            const endCookie = getCookie('end');
 
-            if (!firstCookie || (new Date(firstCookie) < new Date(now.getTime() - 24 * 60 * 60 * 1000))) {
+            if (clearOldCookies() || !firstCookie) {
                 setCookie('first', now.toISOString(), 1);
+                return "Congratulations, you get 10% off on your next beer.";
+            } else if (firstCookie && (new Date(now) - new Date(firstCookie) > 30 * 60 * 1000) && !secondCookie) {
                 setCookie('second', now.toISOString(), 1);
-                return "Congratulations, you get 10% off on your next beer.";
-            } else if (secondCookie && (new Date(secondCookie) < new Date(now.getTime() - 30 * 60 * 1000))) {
+                return "Congratulations, you get 15% off on your next beer.";
+            } else if (secondCookie && (new Date(now) - new Date(secondCookie) > 45 * 60 * 1000) && !thirdCookie) {
                 setCookie('third', now.toISOString(), 1);
-                return "Congratulations, you get 10% off on your next beer.";
-            } else if (thirdCookie && (new Date(thirdCookie) < new Date(now.getTime() - 60 * 60 * 1000))) {
-                setCookie('end', now.toISOString(), 1);
                 return "Congratulations, you get 25% off on your next beer.";
-            } else if (endCookie && (new Date(endCookie) < new Date(now.getTime() - 24 * 60 * 60 * 1000))) {
+            } else if (thirdCookie && (new Date(now) - new Date(thirdCookie) > 3 * 60 * 1000)) {
                 return "Congratulations, you get 5% off on your next beer.";
             } else {
                 return "Welcome back! Enjoy your visit.";
