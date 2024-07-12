@@ -113,9 +113,14 @@
             } else if (secondCookie && (new Date(now) - new Date(secondCookie) > 45 * 60 * 1000) && !thirdCookie) {
                 setCookie('third', now.toISOString(), 1);
                 return "Congratulations, you get 25% off on your next beer.";
-            } else if (thirdCookie && (new Date(now) - new Date(thirdCookie) > 3 * 60 * 1000)) {
+            } else if (thirdCookie && (new Date(now) - new Date(thirdCookie) > 3 * 60 * 1000 ) && (new Date(now) - new Date(thirdCookie) < 120 * 60 * 1000 ) ) {
                 return "Congratulations, you get 5% off on your next beer.";
-            } else {
+            } 
+                else if (thirdCookie && (new Date(now) - new Date(thirdCookie) > 120 * 60 * 1000) ) {
+                clearOldCookies();
+            } 
+            
+            else {
                 return "Welcome back! Enjoy your visit.";
             }
         }
