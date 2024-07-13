@@ -79,8 +79,9 @@
             return null;
         }
 
-      function eraseCookie(name) {
-            document.cookie = name + '=; Max-Age=-1; path=/';
+        function eraseCookie(name) {
+            document.cookie = name + '=; Max-Age=-99999999;';
+        }
 
         function clearOldCookies() {
             const now = new Date();
@@ -121,7 +122,7 @@
             } 
             
             else {
-                return "Welcome back, not much here try your luck again. ";
+                return "Welcome back! Enjoy your visit.";
             }
         }
 
